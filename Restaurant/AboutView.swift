@@ -13,7 +13,7 @@ struct AboutView: View {
     
     var body: some View {
         NavigationView{
-            VStack {
+            VStack(spacing: 20) {
                 Text("Welcome \(username), to")
                     .font(.title)
                 Image("tasteOfThai")
@@ -21,27 +21,34 @@ struct AboutView: View {
                     .scaledToFit()
                     .frame(width: 300, height: 200)
                 Text("You've ordered \(orders) times")
-                    .padding(.bottom)
                     .font(.title3)
                 Button("Order Now"){
                     orders += 1
                 }
-                .padding(.bottom)
+                .italic()
+                .foregroundColor(.red)
                 Button("Reset"){
                     orders = 0
                 }
+                .italic()
+                .foregroundColor(.red)
                 TextField("Enter your name", text:$username)
-                    .padding()
                     .textFieldStyle(.roundedBorder)
                 Text("Hi \(username) you have placed \(orders) orders today")
                 Button("Add people to a reservation"){
                     reservations += 1
                 }
-                    .padding()
+                .italic()
+                .foregroundColor(.red)
                 Text("You have a table for \(reservations) people")
-                    .padding()
                 Text(String(repeating: "🍽️", count: reservations))
+                NavigationLink(destination:
+                                ReservationForm()) {
+                    Text("Go to Reservation Form")
+                        .underline()
+                }
             }
+            .foregroundColor(.black)
             .navigationTitle("About Us")
         }
     }

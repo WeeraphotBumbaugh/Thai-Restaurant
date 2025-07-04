@@ -13,7 +13,17 @@ struct ReservationForm: View {
     @State private var guestCount: Int = 0
     
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationView{
+            VStack(spacing: 20){
+                Form{
+                    Section(header: Text("Reservation Details")){
+                        TextField("Enter your name", text: $username)
+                        Stepper("Guests: \(guestCount)", value: $guestCount, in: 1...10)
+                    }
+                    .navigationTitle("Reservation")
+                }
+            }
+        }
     }
 }
 
