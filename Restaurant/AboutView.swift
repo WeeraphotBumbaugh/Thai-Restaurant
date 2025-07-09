@@ -12,8 +12,8 @@ struct AboutView: View {
     @State private var reservations = 0
     
     var body: some View {
-        NavigationView{
-            VStack(spacing: 20) {
+        NavigationStack{
+            VStack(alignment: .center, spacing: 20) {
                 Text("Welcome \(username), to")
                     .font(.title)
                 Image("tasteOfThai")
@@ -22,6 +22,7 @@ struct AboutView: View {
                     .frame(width: 300, height: 200)
                 Text("You've ordered \(orders) times")
                     .font(.title3)
+                Divider()
                 Button("Order Now"){
                     orders += 1
                 }
@@ -43,7 +44,7 @@ struct AboutView: View {
                 Text("You have a table for \(reservations) people")
                 Text(String(repeating: "🍽️", count: reservations))
                 NavigationLink(destination:
-                                ReservationForm()) {
+                                ReservationForm(username: $username)) {
                     Text("Go to Reservation Form")
                         .underline()
                 }

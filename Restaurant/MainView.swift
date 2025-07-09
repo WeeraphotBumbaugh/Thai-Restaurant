@@ -13,13 +13,13 @@ struct MainView: View {
     @State private var username = ""
     
     var body: some View {
-        NavigationView{
+        NavigationStack{
             if isLoggedIn {
                 VStack(spacing: 30){
                     Text("Welcome, \(username)")
                         .font(.title)
                     
-                    NavigationLink("Make a Reservation", destination: ReservationForm())
+                    NavigationLink("Make a Reservation", destination: ReservationForm(username: $username))
                     
                     NavigationLink("About Us", destination: AboutView())
                     
