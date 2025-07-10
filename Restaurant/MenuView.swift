@@ -75,6 +75,8 @@ struct MenuView: View {
                         .frame(maxWidth: .infinity)
                         .background(Color(.systemGray5))
                         .cornerRadius(15)
+                        .shadow(color: Color.black.opacity(0.2), radius: 4, x: 1, y: 1)
+
                     
                     LazyVGrid(columns: columns, spacing: 16) {
                             ForEach(proteinTypes.sorted(by: {$0.key < $1.key}), id: \.key) {
@@ -91,6 +93,7 @@ struct MenuView: View {
                                 .cornerRadius(10)
                                 .padding(3)
                             }
+                            .shadow(color: Color.black.opacity(0.3), radius: 6, x: 0, y: 3)
                     }
                     .padding(.horizontal)
                     
@@ -106,11 +109,12 @@ struct MenuView: View {
                         .frame(maxWidth: .infinity)
                         .background(Color(.systemGray5))
                         .cornerRadius(8)
+                        .shadow(color: Color.black.opacity(0.2), radius: 4, x: 1, y: 1)
+
                     
                     LazyVStack(spacing: 16){
                         ForEach(menuItems.sorted(by: {$0.key < $1.key}), id: \.key) {
                             (name, price) in
-                            VStack(alignment: .leading, spacing: 8){
                                 HStack{
                                     VStack(alignment: .leading, spacing: 4){
                                         Text(name)
@@ -151,8 +155,7 @@ struct MenuView: View {
                                 .padding()
                                 .background(Color(.systemGray6))
                                 .cornerRadius(12)
-                                .shadow(color: Color.black.opacity(0.05), radius: 2, x: 0, y: 1)
-                            }
+                                .shadow(color: Color.black.opacity(0.3), radius: 6, x: 0, y: 3)
                         }
                     }
                 }
