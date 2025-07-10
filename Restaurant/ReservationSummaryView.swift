@@ -31,6 +31,7 @@ struct ReservationSummaryView: View {
                 }
             }
         }.navigationTitle("Reservation Summary")
+            .padding()
     }
     // The underscore at the beginning removes the need for line 21
     func formattedDate(_ date: Date)->String{

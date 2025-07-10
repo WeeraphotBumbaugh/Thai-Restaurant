@@ -14,25 +14,27 @@ struct MainView: View {
     
     var body: some View {
         NavigationStack{
-            if isLoggedIn {
-                VStack(spacing: 30){
-                    Text("Welcome, \(username)")
-                        .font(.title)
-                    
-                    NavigationLink("Make a Reservation", destination: ReservationForm(username: $username))
-                    
-                    NavigationLink("About Us", destination: AboutView())
-                    
-                    Button("Logout"){
-                        isLoggedIn = false
-                        username = ""
+            VStack{
+                if isLoggedIn {
+                    VStack(spacing: 30){
+                        Text("Welcome, \(username)")
+                            .font(.title)
+                        
+                        NavigationLink("Make a Reservation", destination: ReservationForm(username: $username))
+                        
+                        NavigationLink("About Us", destination: AboutView())
+                        
+                        Button("Logout"){
+                            isLoggedIn = false
+                            username = ""
+                        }
                     }
+                } else {
+                    LoginView(isLoggedIn: $isLoggedIn, username: $username)
                 }
-            } else {
-                LoginView(isLoggedIn: $isLoggedIn, username: $username)
             }
         }
-        .navigationTitle("Login")
+        .navigationTitle("Home")
     }
 }
 

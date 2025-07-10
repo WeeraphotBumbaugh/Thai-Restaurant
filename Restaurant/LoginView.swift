@@ -24,7 +24,7 @@ struct LoginView: View {
                     .textFieldStyle(.roundedBorder)
                 
                 Button("Log In"){
-                    if username == "Weeraphot" {
+                    if !username.isEmpty {
                         isLoggedIn = true
                     }
                 }
