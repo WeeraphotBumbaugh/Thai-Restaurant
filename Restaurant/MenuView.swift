@@ -5,9 +5,38 @@ import SwiftUI
 
 struct MenuView: View {
     
-    @State private var showSpecial = false
     @State private var showDesserts = false
-
+    @State private var showPremiumOnly = false
+    @State private var showValueOnly = false
+    
+    // Use a binding to connect my UI & data, allow only one toggle
+    var premiumOnlyBinding: Binding<Bool> {
+        Binding(
+            get: { self.showPremiumOnly },
+            set: { newValue in
+                self.showPremiumOnly = newValue
+                if newValue {
+                    self.showValueOnly = false
+                }
+            }
+        )
+    }
+    
+    var valueOnlyBinding: Binding<Bool> {
+        Binding(
+            get: { self.showValueOnly },
+            set: { newValue in
+                self.showValueOnly = newValue
+                if newValue {
+                    self.showPremiumOnly = false
+                }
+            }
+        )
+    }
+    
+    let premiumThreshold = 3.99
+    let valueThreshold = 2.99
+    
     var proteinTypes: [String: Double] = [
         "Beef": 1.25,
         "Chicken": 1.00,
@@ -15,7 +44,7 @@ struct MenuView: View {
         "Shrimp": 1.50,
         "Tofu": 0.00
     ]
-
+    
     let menuItems = [
         MenuItem(name: "Green Curry", description: "Green curry", price: 4.00),
         MenuItem(name: "Khao Soi", description: "Khao Soi", price: 4.50),
@@ -29,14 +58,44 @@ struct MenuView: View {
         MenuItem(name: "Yellow Curry", description: "Yellow Curry", price: 3.99),
     ]
     
-    let dessertItems = [
-        DessertItem(name: "Mango Sticky Rice", description: "Mango Sticky Rice", price: 3.50),
-        DessertItem(name: "Banana in Coconut Milk", description: "Banana w/coconut milk", price: 2.50),
-        DessertItem(name: "Throng Yip", description: "Egg-yolk based dessert in syrup", price: 3.00)
-    ]
-
+    // Computed variables/properties
     var sortedMenuItems: [MenuItem] {
         menuItems.sorted { $0.name < $1.name }
+    }
+    
+    var premiumCount: Int {
+        let premiumItems = filteredMenu.filter { $0.price > 3.99 }
+        return premiumItems.count
+    }
+    
+    var regularCount: Int {
+        let regularItems = filteredMenu.filter { $0.price < 3.99 }
+        return regularItems.count
+    }
+    
+    var totalPrice: Double {
+        let total = filteredMenu.map{ $0.price }.reduce(0, +)
+        return total
+    }
+    
+    var filteredMenu: [MenuItem] {
+//        showPremiumOnly ? menuItems.filter{ $0.price > 3.99 } : menuItems
+        if showPremiumOnly {
+            return menuItems.filter{ $0.price > premiumThreshold }
+        } else if showValueOnly {
+            return menuItems.filter{ $0.price < valueThreshold }
+        } else {
+            return sortedMenuItems
+        }
+    }
+    
+    var averagePrice: Double {
+        let total = filteredMenu.map{ $0.price }.reduce(0, +)
+        return total / Double(filteredMenu.count)
+    }
+    
+    var sortedFilteredItems: [MenuItem] {
+        filteredMenu.sorted { $0.name < $1.name }
     }
     
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 16), count: 3)
@@ -55,6 +114,15 @@ struct MenuView: View {
                             .fontWeight(.bold)
                     }
                     
+                    Text("Average price: $\(averagePrice, specifier: "%.2f")")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+                    
+                    Toggle("Show Premium dishes only", isOn: premiumOnlyBinding)
+                        .padding(.horizontal)
+                    Toggle("Show Value dishes only", isOn: valueOnlyBinding)
+                        .padding(.horizontal)
+                    
                     VStack{
                         Button("View Desserts") {
                             showDesserts.toggle()
@@ -68,7 +136,7 @@ struct MenuView: View {
                         .padding(.horizontal, 150)
                         .shadow(color: Color.black.opacity(0.2), radius: 4, x:1, y:1)
                         .sheet(isPresented: $showDesserts) {
-                            DessertView(dessertItems: dessertItems)
+                            DessertView()
                                         }
                     }
                     .padding(.top, 5)
@@ -113,7 +181,7 @@ struct MenuView: View {
                         .foregroundColor(Color.accentColor.opacity(0.3))
                         .padding(.vertical, 8)
                     
-                    Text("Dishes (\(menuItems.count))")
+                    Text("Dishes (\(filteredMenu.count))")
                         .font(.title2)
                         .fontWeight(.semibold)
                         .padding(.vertical, 8)
@@ -125,7 +193,7 @@ struct MenuView: View {
                         .padding(.bottom, 10)
                     
                     LazyVStack(spacing:12){
-                        ForEach(sortedMenuItems) { item in
+                        ForEach(sortedFilteredItems) { item in
                             MenuItemView(item: item)
                         }
                         .padding(.horizontal)
@@ -133,6 +201,9 @@ struct MenuView: View {
                     .padding(.bottom)
                 }
             }
+            Text("Premium: \(premiumCount) | Regular: \(regularCount) | Total: $\(totalPrice, specifier: "%.2f")")
+                .fontWeight(.semibold)
+                .padding(.top, 5)
         }
     }
 }

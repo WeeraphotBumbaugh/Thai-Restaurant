@@ -11,6 +11,7 @@ struct MenuItemView: View {
             VStack(alignment: .leading, spacing: 4){
                 Text(item.name)
                     .font(.headline)
+                //Swift UI specific format for 2 decimal points
                 Text("$\(item.price, specifier: "%.2f")")
                     .foregroundColor(.gray)
             }
@@ -20,7 +21,7 @@ struct MenuItemView: View {
                 PremiumBadge()
             }
             
-            if item.price < 2.75 {
+            if item.price < 2.99 {
                 ValueBadge()
             }
         }
